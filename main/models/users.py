@@ -1,10 +1,10 @@
 from passlib.hash import bcrypt
 from main.db import db, session, Base
 from sqlalchemy.orm import relationship
-from utils import hash_password, _error_response
+from main.utils import hash_password, _error_response
 import time
 import datetime
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token
 
 
 class User(Base):

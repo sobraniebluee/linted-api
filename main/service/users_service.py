@@ -1,5 +1,5 @@
-from main.models.users import User, UserAvatar
-from utils import get_ip_addr,_error_response
+from main.models.users import User
+from main.utils import get_ip_addr,_error_response
 
 
 def register_user_service(**kwargs):
