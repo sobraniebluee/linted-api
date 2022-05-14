@@ -1,0 +1,5 @@
+[
+  "test.py::test_curl_reg",
+  "test.py::test_login",
+  "test.py::test_register"
+]
