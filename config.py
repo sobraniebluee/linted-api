@@ -1,6 +1,51 @@
+from datetime import timedelta
+
+
 class Config:
     ROOT_API_PATH = '/api/v.1.0'
-    SECRET_KEY = '5fa7bc58-8a03-4d32-b083-6392a11ee8b3'
+    JWT_SECRET_KEY = '5fa7bc58-8a03-4d32-b083-6392a11ee8b3'
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_COOKIE_SECURE = False
+    JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
+    JWT_REFRESH_COOKIE_NAME = 'refresh_token_cookie'
 
+
+class ConfigAWS:
+    AWS_ENDPOINT = 'https://linted-storage.s3.eu-west-2.amazonaws.com'
+    AWS_DEFAULT_AVATAR_PATH = '/avatars/default/default_avatar.png'
+    AWS_ACCESS_KEY_ID = 'AKIA4HEINBIQC5G4XL5X'
+    AWS_SECRET_KEY = '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'
+    REGION = 'eu-west-2'
+    MAX_CONTENT_LENGTH = 6 * 1024 * 1024
+
+
+advert_condition_items = [
+    {
+        "id": 100,
+        "name": "New with tags",
+        "description": "A brand-new, unused item with tags attached or in the original packaging."
+    },
+    {
+        "id": 200,
+        "name": "New without tags",
+        "description": "A brand-new, unused item without tags or original packaging."
+    },
+    {
+        "id": 300,
+        "name": "Very good",
+        "description": "A lightly used item that may have slight imperfections, but still looks great. Include photos and descriptions of any flaws in your listing."
+    },
+    {
+        "id": 400,
+        "name": "Good",
+        "description": "A used item that may show imperfections and signs of wear. Include photos and descriptions of flaws in your listing."
+    },
+    {
+        "id": 500,
+        "name": "Satisfactory",
+        "description": "A frequently used item with imperfections and signs of wear. Include photos and descriptions of flaws in your listing."
+    }
+]
 
 DB = "mysql+pymysql://root:root@localhost/linted?charset=utf8mb4"

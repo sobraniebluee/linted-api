@@ -12,6 +12,13 @@ bcrypt = "*"
 pymysql = "*"
 flask-apispec = "*"
 passlib = "*"
+pytest = "*"
+sqlalchemy-utils = "*"
+requests = "*"
+apispec-webframeworks = "*"
+boto3 = "*"
+pillow = "*"
+pyheif = "*"
 
 [dev-packages]
 

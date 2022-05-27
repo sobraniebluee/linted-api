@@ -1,6 +1,5 @@
 from passlib.hash import bcrypt
 import socket
-import json
 
 
 def hash_password(password):
@@ -14,6 +13,28 @@ def get_ip_addr():
 
 
 def _error_response(field, error):
-    return {field: [error]}
+    return {field: error}
 
 
+def _except(session):
+    def decorate(func):
+        def wrapper(self,*args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except Exception as e:
+                session.rollback()
+                raise e
+        return wrapper
+    return decorate
+
+
+data = {"password": ["Missing data for required field."]}
+
+
+def repr_msg_errors(msg):
+    for item in msg:
+        error_text = msg[item][0]
+        msg[item] = error_text
+    return msg
+
+# repr_msg_errors(data)
