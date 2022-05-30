@@ -11,3 +11,9 @@ class AdvertAddSchema(Schema):
     ])
     price = fields.Float(required=True, validate=[validate.Range(min=0, max=100000, error="Price must be less than 100000 !")])
     category = fields.Integer(required=True)
+
+
+class AdvertConditionSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True)
+    description = fields.String(dump_only=True)

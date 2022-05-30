@@ -48,4 +48,4 @@ advert_condition_items = [
     }
 ]
 
-DB = "mysql+pymysql://root:root@localhost/linted?charset=utf8mb4"
+DB = "mysql+pymysql://root@localhost/linted?charset=utf8mb4"

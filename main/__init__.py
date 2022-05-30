@@ -3,7 +3,7 @@ from config import Config
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from .db import session, create_metadata
-from .utils import repr_msg_errors
+from .utils import repr_msg_errors, upload_data_to_table_condition
 from .service.token_service import is_revoked_token_service
 from apispec import APISpec
 from flask_apispec import FlaskApiSpec
@@ -59,9 +59,11 @@ def check_if_token_revoked(jwt_header, jwt_payload):
 from .api.Auth.views import users
 from .api.AuthProfile.views import profile
 from .api.Advert.views import adverts
+from .api.Category.views import categories
 
 app.register_blueprint(users, url_prefix=f"/{app.config['ROOT_API_PATH']}/user")
 app.register_blueprint(profile, url_prefix=f"/{app.config['ROOT_API_PATH']}/profile")
 app.register_blueprint(adverts, url_prefix=f"/{app.config['ROOT_API_PATH']}/adverts")
+app.register_blueprint(categories, url_prefix=f"{app.config['ROOT_API_PATH']}/categories")
 
 metadata = create_metadata()

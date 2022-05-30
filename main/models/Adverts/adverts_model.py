@@ -11,10 +11,11 @@ class Advert(Base):
     id_user = db.Column(UUIDType(binary=False), db.ForeignKey('users.id', ondelete="CASCADE", onupdate="CASCADE"))
     rating = db.Column(db.Integer, nullable=True)
     ban = db.Column(db.BOOLEAN, default=False)
+    category = db.Column(db.Integer, db.ForeignKey('categories.id_category'), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     update_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     advert_info = relationship('AdvertInfo', backref='adverts')
-    advert_images = relationship('AdvertImages', backref="adverts")
+    advert_images = relationship('AdvertImage', backref="adverts")
 
 
 class AdvertInfo(Base):
@@ -24,7 +25,6 @@ class AdvertInfo(Base):
     id_advert = db.Column(UUIDType(binary=False), db.ForeignKey('adverts.id', ondelete="CASCADE", onupdate="CASCADE"))
     title = db.Column(db.VARCHAR(64), nullable=False)
     description = db.Column(db.VARCHAR(500), nullable=False)
-    category = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     condition = db.Column(db.Integer, db.ForeignKey('adverts_condition.id'), nullable=False)
     brand = db.Column(db.VARCHAR(64), nullable=False)
@@ -48,7 +48,7 @@ class AdvertCondition(Base):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.VARCHAR(32), nullable=False)
-    description = db.Column(db.VARCHAR(64), nullable=False)
+    description = db.Column(db.VARCHAR(250), nullable=False)
 
     def __init__(self, id_cond, name, description):
         self.id = id_cond
