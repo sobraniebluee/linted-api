@@ -17,8 +17,8 @@ class Config:
 class ConfigAWS:
     AWS_ENDPOINT = 'https://linted-storage.s3.eu-west-2.amazonaws.com'
     AWS_DEFAULT_AVATAR_PATH = '/avatars/default/default_avatar.png'
-    AWS_ACCESS_KEY_ID = 'AKIA4HEINBIQNPYHPXPS'
-    AWS_SECRET_KEY = '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'
+    AWS_ACCESS_KEY_ID = ''
+    AWS_SECRET_KEY = ''
     REGION = 'eu-west-2'
     MAX_CONTENT_LENGTH = 6 * 1024 * 1024
 
