@@ -10,6 +10,7 @@ class Category(Base):
     is_root = db.Column(db.BOOLEAN)
     title = db.Column(db.VARCHAR(64))
     url = db.Column(db.VARCHAR(250), nullable=True)
+    has_size = db.Column(db.BOOLEAN)
 
     def __init__(self, id_category, id_root, is_root, title, url):
         self.id_category = id_category
@@ -25,7 +26,7 @@ class Category(Base):
         except Exception:
             session.rollback()
             raise
-        
+
     def save(self):
         try:
             session.add(self)

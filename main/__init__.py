@@ -3,7 +3,8 @@ from config import Config
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from .db import session, create_metadata
-from .utils import repr_msg_errors, upload_data_to_table_condition
+from .utils import repr_msg_errors
+from helpers.help import upload_data_to_table_condition
 from .service.token_service import is_revoked_token_service
 from apispec import APISpec
 from flask_apispec import FlaskApiSpec
@@ -60,10 +61,15 @@ from .api.Auth.views import users
 from .api.AuthProfile.views import profile
 from .api.Advert.views import adverts
 from .api.Category.views import categories
+from .api.Size.views import sizes
+from .api.File.views import files
 
-app.register_blueprint(users, url_prefix=f"/{app.config['ROOT_API_PATH']}/user")
-app.register_blueprint(profile, url_prefix=f"/{app.config['ROOT_API_PATH']}/profile")
-app.register_blueprint(adverts, url_prefix=f"/{app.config['ROOT_API_PATH']}/adverts")
+
+app.register_blueprint(users, url_prefix=f"{app.config['ROOT_API_PATH']}/user")
+app.register_blueprint(profile, url_prefix=f"{app.config['ROOT_API_PATH']}/profile")
+app.register_blueprint(adverts, url_prefix=f"{app.config['ROOT_API_PATH']}/adverts")
 app.register_blueprint(categories, url_prefix=f"{app.config['ROOT_API_PATH']}/categories")
+app.register_blueprint(sizes, url_prefix=f"{app.config['ROOT_API_PATH']}/sizes")
+app.register_blueprint(files, url_prefix=f"{app.config['ROOT_API_PATH']}/files")
 
 metadata = create_metadata()

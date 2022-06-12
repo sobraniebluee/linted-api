@@ -34,6 +34,8 @@ def get_all_categories(id_category, categories):
         'title': category.title,
         'url': category.url,
         'is_root': category.is_root,
+        'id_root': category.id_root,
+        'has_size': category.has_size,
         'categories': []
     }
     if category.is_root:
@@ -41,7 +43,6 @@ def get_all_categories(id_category, categories):
         for sub_category in sub_categories:
             get_all_categories(sub_category.id_category, obj['categories'])
     categories.append(obj)
-
 
 
 def add_category_service(id_category, id_root, is_root, title, url):

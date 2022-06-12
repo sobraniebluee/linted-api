@@ -1,3 +1,4 @@
+from typing import Tuple, Dict
 import io
 
 import boto3
@@ -9,15 +10,34 @@ import pyheif
 
 
 class UploadAws:
+    @classmethod
+    def upload_advert_image(cls, file):
+        endpoint = 'f'
+        bucket = 'adverts'
+
+        verify, _error = cls.verify_file(file)
+        if not verify:
+            return verify, _error
+
+        file_name = f"{cls.generate_uniq_name()}.jpeg"
+        comp_file, file_info = cls.compression_file(file=file)
+        status, _error = cls.upload(file=comp_file, file_name=file_name, endpoint=endpoint, bucket=bucket)
+        if status:
+            return status, {
+                'path': f'{ConfigAWS.AWS_ENDPOINT}/{endpoint}/{bucket}/{file_name}',
+                **file_info,
+            }
+        else:
+            return status, _error
 
     @classmethod
-    def upload_full_avatar(cls, file):
+    def upload_full_avatar(cls, file) -> Tuple[bool, str | Dict] | str:
         endpoint = 'avatars'
         bucket = 'full'
 
         verify, _error = cls.verify_file(file)
         if not verify:
-            return _error
+            return verify, _error
 
         file_name = f"{cls.generate_uniq_name()}.jpeg"
         comp_file, file_info = cls.compression_file(file=file)
@@ -52,7 +72,7 @@ class UploadAws:
             raise Exception("Error!")
 
     @classmethod
-    def upload(cls, file, file_name, endpoint, bucket):
+    def upload(cls, file, file_name, endpoint, bucket) -> Tuple[bool, str]:
         try:
             s3 = boto3.client(service_name='s3', endpoint_url=f"{ConfigAWS.AWS_ENDPOINT}/{endpoint}/", region_name=ConfigAWS.REGION, aws_access_key_id=ConfigAWS.AWS_ACCESS_KEY_ID, aws_secret_access_key=ConfigAWS.AWS_SECRET_KEY)
             response = s3.put_object(Bucket=bucket,
@@ -68,7 +88,7 @@ class UploadAws:
             raise
 
     @classmethod
-    def verify_file(cls, file):
+    def verify_file(cls, file) -> Tuple[bool, str]:
         size = os.fstat(file.fileno()).st_size
         file_type = cls.check_type(file)
 
@@ -88,9 +108,10 @@ class UploadAws:
             return False
 
     @classmethod
-    def generate_uniq_name(cls):
+    def generate_uniq_name(cls) -> str:
         return str(uuid.uuid4()).replace('-', '')
 
+    # Return file and his size
     @classmethod
     def compression_file(cls, file):
         # Save file
@@ -99,7 +120,7 @@ class UploadAws:
         upload_dir = f'main/service/aws/temp/{filename}.{filename_type}'
         file.save(os.path.join(upload_dir))
 
-        print("%.1f KB" % round(os.path.getsize(upload_dir) / 1024, 1))
+        # print("%.1f KB" % round(os.path.getsize(upload_dir) / 1024, 1))
         # Check HEIF
         if filename_type in ['heic', 'heif', 'avif']:
             image, size = cls.convert_heif(upload_dir)
@@ -115,7 +136,7 @@ class UploadAws:
         upload_dir = f'main/service/aws/temp/{filename}.jpeg'
         image.save(upload_dir, 'JPEG')
 
-        print("%.1f KB" % round(os.path.getsize(f'main/service/aws/temp/{filename}.jpeg') / 1024, 1))
+        # print("%.1f KB" % round(os.path.getsize(f'main/service/aws/temp/{filename}.jpeg') / 1024, 1))
         # RETURN CONVERT IMAGE
         return_info = {
             'size': os.path.getsize(f'main/service/aws/temp/{filename}.jpeg'),

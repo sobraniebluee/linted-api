@@ -1,7 +1,7 @@
 from passlib.hash import bcrypt
 import socket
-from config import advert_condition_items
-from main.models.Adverts.adverts_model import AdvertCondition
+import string
+import random
 
 
 def hash_password(password):
@@ -37,12 +37,5 @@ def repr_msg_errors(msg):
     return msg
 
 
-def upload_data_to_table_condition():
-    try:
-        for item in advert_condition_items:
-            new_item = AdvertCondition(item['id'], item['name'], item['description'])
-            new_item.save()
-    except Exception:
-        raise
-
-
+def random_url():
+    return ''.join(random.choices(string.ascii_uppercase, k=15))

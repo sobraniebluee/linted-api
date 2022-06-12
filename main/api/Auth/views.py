@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_apispec import use_kwargs, marshal_with
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from main.schemas.user_schema import UserSchema, AuthSchema, JWTSchema, UserAdditionalInfo
 
 from main.service.user_service import (
@@ -19,7 +19,8 @@ users = Blueprint('users', __name__)
 @marshal_with(AuthSchema)
 def register_user(**kwargs):
     try:
-        user = register_user_service(**kwargs)
+        ip_user = request.remote_addr
+        user = register_user_service(ip_user=ip_user, **kwargs)
         return user
     except Exception as e:
         raise e
@@ -59,7 +60,7 @@ def logout():
         raise
 
 
-@users.route('/protected', methods=['GET'])
+@users.route('/protected', methods=['GET', 'POST'])
 @jwt_required()
 def protected():
     id_user = get_jwt_identity()

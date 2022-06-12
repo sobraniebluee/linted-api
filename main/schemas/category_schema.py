@@ -7,4 +7,5 @@ class CategorySchema(Schema):
     is_root = fields.Boolean(required=True)
     title = fields.String(required=True)
     url = fields.Field()
+    has_size = fields.Boolean(dump_only=True)
 

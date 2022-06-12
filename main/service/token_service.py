@@ -28,6 +28,8 @@ def is_revoked_token_service(identity, jwt_header, jwt_payload):
     try:
         token_encode = jwt.encode(jwt_payload, Config.JWT_SECRET_KEY, algorithm=jwt_header['alg'])
         token = UserTokens.query.filter(UserTokens.user_id == identity).scalar()
+        if token_encode != token.access_token:
+            return True
         if token:
             return token is None
         return True

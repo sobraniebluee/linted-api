@@ -1,4 +1,12 @@
 class Error:
     @classmethod
-    def server_error(cls, msg):
+    def server_error(cls, msg="Server Error!"):
         return {'message': str(msg)}, 500
+
+    @classmethod
+    def error_not_found(cls, msg='Not Found!', status_code=404):
+        return {'message': msg}, status_code
+
+    @classmethod
+    def error_default(cls, msg, status_code):
+        return {'message': msg}, status_code

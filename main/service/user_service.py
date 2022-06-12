@@ -15,7 +15,7 @@ from config import ConfigAWS
 # }
 
 
-def register_user_service(**kwargs):
+def register_user_service(ip_user, **kwargs):
     email = kwargs.get('email', None)
     username = kwargs.get('username', None)
     password = kwargs.get('password')
@@ -33,7 +33,7 @@ def register_user_service(**kwargs):
         user = User(**kwargs)
         user.save()
         # Create Additional Info
-        user_additional_info = UserAdditionalInfo(id_user=user.id, ip_user=get_ip_addr())
+        user_additional_info = UserAdditionalInfo(id_user=user.id, ip_user=ip_user)
         user_additional_info.save()
         # Create Default Avatar
         default_path = f"{ConfigAWS.AWS_ENDPOINT}{ConfigAWS.AWS_DEFAULT_AVATAR_PATH}"

@@ -6,6 +6,7 @@ from main.service.category_service import (
     get_categories_service,
     add_category_service,
     delete_category_service)
+
 categories = Blueprint('categories', __name__)
 
 
