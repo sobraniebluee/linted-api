@@ -7,6 +7,15 @@ from main.middleware.error import Error
 from sqlalchemy import or_
 from config import Config
 
+    # stm = session.query(Advert)
+    # if categories_id:
+    #     found_all_sub_catalogs(categories_id)
+    #     stm = stm.where(AdvertInfo.category_id.in_(categories_id))
+    # if sizes_id:
+    #     stm = stm.where(AdvertInfo.size_id.in_(sizes_id))
+    # if conditions_id:
+    #     stm = stm.where(AdvertInfo.condition_id.in_(conditions_id))
+
 
 def get_adverts_service(**kwargs):
     categories_id = kwargs.get('categories_id', None)
@@ -219,5 +228,6 @@ def watch_advert(identity, id_advert):
         if identity['jwt'] and is_watch.id_user is None:
             setattr(is_watch, 'id_user', identity['jwt'])
             session.commit()
+
 
 

@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from .db import session, create_metadata
 from .utils import repr_msg_errors
-from helpers.help import upload_data_to_table_condition
+# from helpers.help import upload_data_to_table_condition
 from .service.token_service import is_revoked_token_service
 from apispec import APISpec
 from flask_apispec import FlaskApiSpec
@@ -40,10 +40,13 @@ def server_error(error):
 def handler_error(err):
     headers = err.data.get('headers', None)
     messages = err.data.get('messages', ['Invalid request'])
-    if headers:
-        return jsonify({'message': repr_msg_errors(messages['json'])}), 400, headers
-    else:
-        return jsonify({'message': repr_msg_errors(messages['json'])}), 400
+    if messages.get('json', None) is not None:
+        if headers:
+            return jsonify({'message': repr_msg_errors(messages['json'])}), 400, headers
+        else:
+            return jsonify({'message': repr_msg_errors(messages['json'])}), 400
+
+    return jsonify({'msg': messages})
 
 
 @app.teardown_appcontext

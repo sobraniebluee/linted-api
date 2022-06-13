@@ -12,6 +12,8 @@ class Config:
     MAX_COUNT_FILES_FOR_ADVERT = 8
     ADVERT_IMAGE = 'advert_image'
     AVATAR_IMAGE = 'avatar_image'
+    PAGE_COUNT_ADVERT = 2
+    MAX_PRICE = 1000000
 
 
 class ConfigAWS:

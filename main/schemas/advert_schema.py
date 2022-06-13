@@ -1,9 +1,16 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, pre_load, post_load
 from main.schemas.size_schema import SizeSchema
 from main.schemas.category_schema import CategorySchema
 from main.schemas.user_schema import UserSchema
 from main.schemas.file_schema import FileSchema
 from config import Config
+
+
+class AdvertPagination(Schema):
+    current_page = fields.Integer(dump_only=True)
+    total_pages = fields.Integer(dump_only=True)
+    total_entries = fields.Integer(dump_only=True)
+    per_page = fields.Integer(dump_only=True)
 
 
 class AdvertImageSchema(Schema):
@@ -47,6 +54,44 @@ class AdvertSchema(Schema):
 
     def count_watches(self, obj):
         return int(len(obj.watches))
+
+
+class ArgsAdvertsSchema(Schema):
+    categories_id = fields.List(fields.Field(), load_only=True)
+    search_text = fields.String(load_only=True)
+    sizes_id = fields.List(fields.Field(), load_only=True)
+    sort = fields.String(load_only=True, validate=[validate.OneOf(['asc', 'desc', 'newest'])])
+    price_from = fields.Float(load_only=True)
+    price_to = fields.Float(load_only=True)
+    conditions_id = fields.List(fields.Field(), load_only=True)
+    page = fields.Integer(load_only=True)
+
+    @post_load
+    def parse_categories_id(self, data, **kwargs):
+        if 'categories_id' in data:
+            data['categories_id'] = self.parse_to_list(data['categories_id'])
+        if 'sizes_id' in data:
+            data['sizes_id'] = self.parse_to_list(data['sizes_id'])
+        if 'conditions_id' in data:
+            data['conditions_id'] = self.parse_to_list(data['conditions_id'])
+        if 'page' in data:
+            if data['page'] < 1:
+                data['page'] = 1
+            if data['page'] == 1:
+                data['page'] = 0
+        else:
+            data['page'] = 0
+        return data
+
+    @staticmethod
+    def parse_to_list(params):
+        return list(map(lambda x: int(x), str(params[0]).split(',')))
+
+
+class AllAdvertsSchema(Schema):
+    items = fields.Nested(AdvertSchema(many=True), dump_only=True)
+    pagination = fields.Nested(AdvertPagination, dump_only=True)
+
 
 class AdvertAddSchema(Schema):
     title = fields.String(required=True, validate=[

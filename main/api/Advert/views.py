@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_apispec import use_kwargs, marshal_with
-from main.schemas.advert_schema import AdvertAddSchema, AdvertConditionSchema, AdvertSchema, AdvertEditSchema
+from main.schemas.advert_schema import AdvertAddSchema, AdvertConditionSchema, AdvertSchema, AllAdvertsSchema, ArgsAdvertsSchema, AdvertEditSchema
 from main.service.advert.advert_service import (
     get_advert_condition_service,
     add_new_advert_data_service,
@@ -16,9 +16,10 @@ adverts = Blueprint('adverts', __name__)
 
 
 @adverts.route('', methods=["GET"])
-@marshal_with(AdvertSchema(many=True))
-def get_adverts():
-    return get_adverts_service()
+@marshal_with(AllAdvertsSchema)
+@use_kwargs(ArgsAdvertsSchema, location='query')
+def get_adverts(**kwargs):
+    return get_adverts_service(**kwargs)
 
 
 @adverts.route('<url_advert>', methods=["GET"])
