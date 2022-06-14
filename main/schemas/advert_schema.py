@@ -28,8 +28,6 @@ class AdvertInfoSchema(Schema):
     title = fields.String(dump_only=True)
     description = fields.String(dump_only=True)
     price = fields.Float(dump_only=True)
-    watches = fields.Integer(dump_only=True)
-    likes = fields.Integer(dump_only=True)
     condition = fields.Nested(AdvertConditionSchema(only=('title',)))
     size = fields.Nested(SizeSchema(only=('title',)))
     category = fields.Nested(CategorySchema(only=('id_category', 'title',)))
@@ -45,9 +43,9 @@ class AdvertSchema(Schema):
     info = fields.Nested(AdvertInfoSchema)
     images = fields.Nested(AdvertImageSchema(many=True))
     user = fields.Nested(UserSchema(only=('username', 'avatar', 'id')))
-    message = fields.String(dump_only=True)
     likes = fields.Method('count_likes', dump_only=True)
     watches = fields.Method('count_watches', dump_only=True)
+    message = fields.String(dump_only=True)
 
     def count_likes(self, obj):
         return int(len(obj.likes))
@@ -77,8 +75,8 @@ class ArgsAdvertsSchema(Schema):
         if 'page' in data:
             if data['page'] < 1:
                 data['page'] = 1
-            if data['page'] == 1:
-                data['page'] = 0
+            if data['page']:
+                data['page'] = data['page'] - 1
         else:
             data['page'] = 0
         return data
@@ -99,7 +97,7 @@ class AdvertAddSchema(Schema):
     description = fields.String(required=True, validate=[
         validate.Length(min=4, max=250, error="Please,enter title in range 5 to 64 chars!")])
     condition_id = fields.Integer(required=True, validate=[
-        validate.OneOf([100, 200, 300, 400, 500], error="Please,send valid data!")
+        validate.OneOf([100, 200, 300, 400, 500], error="Please,enter valid condition!")
     ])
     price = fields.Float(required=True, validate=[validate.Range(min=0, max=100000, error="Price must be less than 100000 !")])
     category_id = fields.Integer(required=True)
