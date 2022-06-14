@@ -11,7 +11,6 @@ from main.service.advert.delete_service import delete_advert_service
 from main.service.advert.add_service import add_new_advert_data_service
 from main.service.advert.edit_service import edit_advert_service
 from main.service.advert.like_service import unlike_advert_service, like_advert_service
-from main.middleware.error import Error
 
 adverts = Blueprint('adverts', __name__)
 
