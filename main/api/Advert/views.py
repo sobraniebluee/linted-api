@@ -35,7 +35,6 @@ def get_advert(url_advert):
 # Edit advert
 @adverts.route('<url_advert>', methods=["PUT"])
 @use_kwargs(AdvertEditSchema)
-@marshal_with(AdvertSchema)
 @jwt_required()
 def edit_advert(url_advert, **kwargs):
     images = kwargs.get('images')
