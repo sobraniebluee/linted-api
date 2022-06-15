@@ -41,6 +41,7 @@ class UserSchema(Schema):
     password = fields.String(required=True, validate=[
         validate.Length(min=8, max=64, error="Please,enter password in the range 3 - 64 symbols")
     ], load_only=True)
+    balance = fields.Float(dump_only=True)
     verified = fields.Boolean(dump_only=True)
     additional_info = fields.Nested(UserAdditionalInfo, dump_only=True)
     avatar = fields.Nested(UserAvatarSchema, dump_only=True)

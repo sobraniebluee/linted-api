@@ -19,6 +19,7 @@ class User(Base):
     email = db.Column(db.VARCHAR(length=64), nullable=False, unique=True)
     password = db.Column(db.VARCHAR(length=250), nullable=False)
     verified = db.Column(db.BOOLEAN, default=False, nullable=False)
+    balance = db.Column(db.Float, default=100, nullable=False)
     avatar = relationship('UserAvatar', backref='users', uselist=False)
     additional_info = relationship('UserAdditionalInfo', uselist=False, backref='users', lazy='joined')
     tokens = relationship('UserTokens', uselist=False, backref='users')
@@ -28,6 +29,7 @@ class User(Base):
         self.username = f"@{kwargs.get('username')}"
         self.email = kwargs.get('email'),
         self.password = hash_password(kwargs.get('password'))
+        self.balance = 1000
 
     def save(self):
         session.add(self)
