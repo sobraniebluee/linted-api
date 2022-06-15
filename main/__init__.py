@@ -66,7 +66,8 @@ from .api.Advert.views import adverts
 from .api.Category.views import categories
 from .api.Size.views import sizes
 from .api.File.views import files
-
+from .api.Offer.views import offers
+from .api.Transaction.views import transaction
 
 app.register_blueprint(users, url_prefix=f"{app.config['ROOT_API_PATH']}/user")
 app.register_blueprint(profile, url_prefix=f"{app.config['ROOT_API_PATH']}/profile")
@@ -74,5 +75,7 @@ app.register_blueprint(adverts, url_prefix=f"{app.config['ROOT_API_PATH']}/adver
 app.register_blueprint(categories, url_prefix=f"{app.config['ROOT_API_PATH']}/categories")
 app.register_blueprint(sizes, url_prefix=f"{app.config['ROOT_API_PATH']}/sizes")
 app.register_blueprint(files, url_prefix=f"{app.config['ROOT_API_PATH']}/files")
+app.register_blueprint(offers, url_prefix=f"{app.config['ROOT_API_PATH']}/offers")
+app.register_blueprint(transaction, url_prefix=f"{app.config['ROOT_API_PATH']}/transactions")
 
 metadata = create_metadata()
