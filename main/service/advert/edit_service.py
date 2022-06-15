@@ -40,5 +40,5 @@ def edit_advert_service(id_user, url_advert, images, **kwargs):
         else:
             setattr(advert_image, 'is_preview', is_preview)
 
-    return advert, 200
+    return '', 204
 

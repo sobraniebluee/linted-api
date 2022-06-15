@@ -53,7 +53,8 @@ def get_adverts_service(**kwargs):
     stm = stm.filter(
         AdvertInfo.price >= price_from,
         AdvertInfo.price <= price_to,
-        AdvertInfo.id_advert == Advert.id
+        AdvertInfo.id_advert == Advert.id,
+        Advert.is_bought == False
     )
     stm_cte = stm.cte()
     adverts_id = session.query(stm_cte).all()
@@ -90,8 +91,9 @@ def get_advert_by_url_service(identity, url_advert):
     advert = Advert.query.filter(Advert.url == url_advert).first()
     if not advert:
         return Error.error_not_found()
-    watch_advert(identity=identity, id_advert=advert.id)
-    return advert, 200
+    else:
+        watch_advert(identity=identity, id_advert=advert.id)
+        return advert, 200
 
 
 def find_all_sub_catalogs(categories_id):

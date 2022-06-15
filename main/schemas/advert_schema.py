@@ -1,9 +1,24 @@
-from marshmallow import Schema, fields, validate, pre_load, post_load
+from marshmallow import Schema, fields, validate, post_load, post_dump
 from main.schemas.size_schema import SizeSchema
 from main.schemas.category_schema import CategorySchema
 from main.schemas.user_schema import UserSchema
 from main.schemas.file_schema import FileSchema
 from config import Config
+
+
+class AdvertWatches(Schema):
+    id = fields.Integer()
+    id_user = fields.String()
+    id_advert = fields.String()
+    ip_user = fields.String()
+    created_at = fields.String()
+
+
+class AdvertLikes(Schema):
+    id = fields.Integer()
+    id_user = fields.String()
+    id_advert = fields.String()
+    created_at = fields.String()
 
 
 class AdvertPagination(Schema):
@@ -43,15 +58,18 @@ class AdvertSchema(Schema):
     info = fields.Nested(AdvertInfoSchema)
     images = fields.Nested(AdvertImageSchema(many=True))
     user = fields.Nested(UserSchema(only=('username', 'avatar', 'id')))
-    likes = fields.Method('count_likes', dump_only=True)
-    watches = fields.Method('count_watches', dump_only=True)
+    likes = fields.Nested(AdvertLikes(only=('id', ), many=True), dump_only=True)
+    watches = fields.Nested(AdvertWatches(only=('id',), many=True), dump_only=True)
     message = fields.String(dump_only=True)
 
-    def count_likes(self, obj):
-        return int(len(obj.likes))
-
-    def count_watches(self, obj):
-        return int(len(obj.watches))
+    @post_dump
+    def dump_l(self, data, **kwargs):
+        if 'message' not in data:
+            data['likes'] = int(len(data['likes']))
+            data['watches'] = int(len(data['watches']))
+            return data
+        else:
+            return data
 
 
 class ArgsAdvertsSchema(Schema):
