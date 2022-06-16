@@ -14,6 +14,8 @@ class Config:
     AVATAR_IMAGE = 'avatar_image'
     PAGE_COUNT_ADVERT = 24
     MAX_PRICE = 1000000
+    OFFER_PRICE_PERCENT = 0.5
+    MAX_COUNT_OFFERS_PER_DAY = 7
 
 
 class ConfigAWS:
