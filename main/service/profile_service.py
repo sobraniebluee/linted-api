@@ -1,7 +1,7 @@
 from main.models.User.user_model import User, UserAdditionalInfo, UserAvatar, func
 from sqlalchemy.exc import IntegrityError
 from main.utils import _error_response
-from main.service.aws.upload_aws import UploadAws
+from main.service.Aws.upload_aws import UploadAws
 from main.middleware.error import Error
 
 

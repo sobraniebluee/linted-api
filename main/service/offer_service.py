@@ -32,10 +32,10 @@ def reqeust_offer_service(id_buyer, id_advert, price):
         return Error.error_default(
             msg=f"Sorry, per day you can sent only {Config.MAX_COUNT_OFFERS_PER_DAY} offers",
             status_code=400)
-    prev_offers = Offer.query.filter(Offer.id_buyer == id_buyer, Offer.id_advert == advert.id, Offer.from_who == BUYER).all()
-    for prev_offer in prev_offers:
-        setattr(prev_offer, 'is_accepted', False)
-        prev_offer.commit()
+    # prev_offers = Offer.query.filter(Offer.id_buyer == id_buyer, Offer.id_advert == Advert.id, Offer.from_who == BUYER).all()
+    # for prev_offer in prev_offers:
+    #     setattr(prev_offer, 'is_accepted', False)
+    #     prev_offer.commit()
     new_offer = Offer(buyer.id, advert.id, price, None, BUYER)
     new_offer.save()
     return new_offer, 200

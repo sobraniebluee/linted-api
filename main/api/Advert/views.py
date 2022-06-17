@@ -2,15 +2,15 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_apispec import use_kwargs, marshal_with
 from main.schemas.advert_schema import AdvertAddSchema, AdvertConditionSchema, AdvertSchema, AllAdvertsSchema, ArgsAdvertsSchema, AdvertEditSchema
-from main.service.advert.get_service import (
+from main.service.Advert.get_service import (
     get_advert_condition_service,
     get_advert_by_url_service,
     get_adverts_service
 )
-from main.service.advert.delete_service import delete_advert_service
-from main.service.advert.add_service import add_new_advert_data_service
-from main.service.advert.edit_service import edit_advert_service
-from main.service.advert.like_service import unlike_advert_service, like_advert_service
+from main.service.Advert.delete_service import delete_advert_service
+from main.service.Advert.add_service import add_new_advert_data_service
+from main.service.Advert.edit_service import edit_advert_service
+from main.service.Advert.like_service import unlike_advert_service, like_advert_service
 
 adverts = Blueprint('adverts', __name__)
 
@@ -23,7 +23,7 @@ def get_adverts(**kwargs):
     return get_adverts_service(**kwargs)
 
 
-# Get one advert
+# Get one Advert
 @adverts.route('<url_advert>', methods=["GET"])
 @jwt_required(optional=True)
 @marshal_with(AdvertSchema)
@@ -32,7 +32,7 @@ def get_advert(url_advert):
     return get_advert_by_url_service(identity, url_advert=url_advert)
 
 
-# Edit advert
+# Edit Advert
 @adverts.route('<url_advert>', methods=["PUT"])
 @use_kwargs(AdvertEditSchema)
 @jwt_required()
@@ -43,7 +43,7 @@ def edit_advert(url_advert, **kwargs):
     return edit_advert_service(url_advert=url_advert, id_user=identity, images=images, **kwargs)
 
 
-# Add advert
+# Add Advert
 @adverts.route('', methods=["POST"])
 @use_kwargs(AdvertAddSchema)
 @jwt_required()

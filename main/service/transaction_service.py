@@ -52,14 +52,15 @@ def complete_transaction_service(id_transaction, id_buyer):
 
     advert = Advert.query.filter(Advert.id == transaction.id_advert).first()
     if not advert:
-        return Error.error_not_found(msg="Sorry,this advert doesn't exist", status_code=400)
+        return Error.error_not_found(msg="Sorry,this Advert doesn't exist", status_code=400)
     if advert.is_bought:
         return Error.error_default(msg="Product already bought", status_code=400)
 
     buyer = User.query.filter(User.id == id_buyer).first()
     seller = User.query.filter(User.id == advert.id_user).first()
-
-    if not buyer or not seller:
+    if buyer.id != transaction.id_buyer or seller.id != transaction.id_seller:
+        return Error.server_error()
+    if not buyer or not seller or buyer.id == seller.id:
         return Error.server_error()
 
     try:
