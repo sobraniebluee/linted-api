@@ -136,7 +136,7 @@ class UploadAws:
         upload_dir = f'main/service/aws/temp/{filename}.jpeg'
         image.save(upload_dir, 'JPEG')
 
-        # print("%.1f KB" % round(os.path.getsize(f'main/service/aws/temp/{filename}.jpeg') / 1024, 1))
+        # print("%.1f KB" % round(os.path.getsize(f'main/service/Aws/temp/{filename}.jpeg') / 1024, 1))
         # RETURN CONVERT IMAGE
         return_info = {
             'size': os.path.getsize(f'main/service/aws/temp/{filename}.jpeg'),
