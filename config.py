@@ -27,6 +27,14 @@ class ConfigAWS:
     MAX_CONTENT_LENGTH = 6 * 1024 * 1024
 
 
+class Const:
+    FOLLOW = 'follow'
+    UNFOLLOW = 'unfollow'
+    MAX_LENGTH_REVIEW = 128
+    FOLLOWERS = 'followers'
+    FOLlOWS = 'follows'
+
+
 advert_condition_items = [
     {
         "id": 100,
