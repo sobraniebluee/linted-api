@@ -5,6 +5,50 @@ from main.models.Review.review_model import MemberReview
 from main.models.MemberSubscription.member_subscription_model import MemberSubscription
 from sqlalchemy import func
 from config import Const
+import math
+import re
+from sqlalchemy import or_
+
+
+def user_search_service(search_text, page):
+    if search_text == '':
+        return Error.error_not_found()
+    stm = session.query(User.id)
+    pattern = r"[.,\/#!$%\^&\*;:{}=\-_`~()]"
+    search_text = re.sub(pattern, '', search_text)
+    search_text = search_text.strip().upper().split(' ')
+    for word in search_text:
+        stm = stm.where(or_(
+            User.username.ilike(f"%{word}%"),
+        ))
+    stm_cte = stm.cte()
+    users_id = session.query(stm_cte).all()
+    users = []
+    if users_id:
+        for user_id, in users_id:
+            user = User.query.filter(User.id == user_id).first()
+            users.append(user)
+        users = [users[i:i + Const.MAX_MEMBER_PER_PAGE] for i in range(0, len(users_id), Const.MAX_MEMBER_PER_PAGE)]
+        try:
+            users = users[page]
+        except IndexError:
+            users = []
+    else:
+        users = []
+
+    page = page + 1
+    users_count = len(users_id)
+    total_pages = math.ceil(users_count / Const.MAX_MEMBER_PER_PAGE)
+    response = {
+        'users': users,
+        'pagination': {
+            'current_page': page,
+            'per_page': Const.MAX_MEMBER_PER_PAGE,
+            'total_entries': users_count,
+            'total_pages': total_pages
+        }
+    }
+    return response, 200
 
 
 def get_user_service(username):

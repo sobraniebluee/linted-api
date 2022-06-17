@@ -5,16 +5,25 @@ from main.service.Member.member_service import (
     get_user_service,
     get_user_wardrobe_service,
     get_user_reviews_service,
-    get_user_subscription_service)
+    get_user_subscription_service,
+    user_search_service)
 from main.schemas.advert_schema import AdvertSchema
 from main.schemas.member_subscription_schema import RequestSubscription
 from main.service.Member.subscription_service import toggle_subscription_service
 from config import Const
 from main.schemas.review_schema import MemberReviewSchema
-from main.schemas.member_schema import MemberSchema
+from main.schemas.member_schema import MemberSchema, QueryMemberSchema, ResponseSearchMembersSchema
 from main.schemas.user_schema import UserSchema
 
 members = Blueprint('members', __name__)
+
+
+@members.route('search', methods=['GET'])
+@jwt_required(optional=True)
+@use_kwargs(QueryMemberSchema, location='query')
+@marshal_with(ResponseSearchMembersSchema)
+def get_users(**kwargs):
+    return user_search_service(**kwargs)
 
 
 @members.route('<username>', methods=['GET'])
@@ -36,7 +45,6 @@ def get_user_wardrobe(username):
 @jwt_required(optional=True)
 @marshal_with(MemberReviewSchema(many=True))
 def get_user_reviews(username):
-    identity = get_jwt_identity()
     return get_user_reviews_service(username, None)
 
 

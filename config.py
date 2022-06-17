@@ -33,6 +33,7 @@ class Const:
     MAX_LENGTH_REVIEW = 128
     FOLLOWERS = 'followers'
     FOLlOWS = 'follows'
+    MAX_MEMBER_PER_PAGE = 40
 
 
 advert_condition_items = [
