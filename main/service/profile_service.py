@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from main.utils import _error_response
 from main.service.Aws.upload_aws import UploadAws
 from main.middleware.error import Error
+from main.models.Advert.advert_model import AdvertLikes, Advert
 
 
 def get_profile_data_service(user_id):
@@ -56,3 +57,7 @@ def update_avatar_service(user_id, file):
     except Exception as e:
         return Error.server_error(e)
 
+
+def get_user_favourites_service(id_user):
+    favourites = Advert.query.filter(AdvertLikes.id_user == id_user, AdvertLikes.id_advert == Advert.id).all()
+    return favourites, 200

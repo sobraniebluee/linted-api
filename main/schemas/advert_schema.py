@@ -63,7 +63,7 @@ class AdvertSchema(Schema):
     message = fields.String(dump_only=True)
 
     @post_dump
-    def dump_l(self, data, **kwargs):
+    def dump_data(self, data, **kwargs):
         if 'message' not in data:
             data['likes'] = int(len(data['likes']))
             data['watches'] = int(len(data['watches']))

@@ -6,8 +6,10 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from main.service.profile_service import (
     get_profile_data_service,
     update_profile_data_service,
-    update_avatar_service
+    update_avatar_service,
+    get_user_favourites_service
 )
+from main.schemas.advert_schema import AdvertSchema
 
 profile = Blueprint('profile', __name__)
 
@@ -46,3 +48,10 @@ def upload_profile_avatar():
     except Exception as e:
         return {'message': f'Server Error: {str(e)}'}
 
+
+@profile.route('/favourites', methods=['GET'])
+@jwt_required()
+@marshal_with(AdvertSchema(many=True))
+def user_favourites():
+    identity = get_jwt_identity()
+    return get_user_favourites_service(identity)
