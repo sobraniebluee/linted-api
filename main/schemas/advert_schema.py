@@ -83,7 +83,7 @@ class ArgsAdvertsSchema(Schema):
     page = fields.Integer(load_only=True)
 
     @post_load
-    def parse_categories_id(self, data, **kwargs):
+    def parse_data(self, data, **kwargs):
         if 'categories_id' in data:
             data['categories_id'] = self.parse_to_list(data['categories_id'])
         if 'sizes_id' in data:
