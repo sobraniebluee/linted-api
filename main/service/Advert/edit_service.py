@@ -10,7 +10,7 @@ def edit_advert_service(id_user, url_advert, images, **kwargs):
         return Error.server_error()
     advert = Advert.query.filter(Advert.url == url_advert).first()
     if not advert:
-        return Error.error_default("This advert doesn't exists!", 400)
+        return Error.error_default("This Advert doesn't exists!", 400)
 
     images = list(set((images)))
 

@@ -8,7 +8,7 @@ def like_advert_service(id_user, url_advert):
         return Error.error_not_found(msg="Advert not found!")
     is_liked = AdvertLikes.query.filter(AdvertLikes.id_user == id_user, AdvertLikes.id_advert == advert.id).first()
     if is_liked:
-        return Error.error_default("Is advert already added to favourites", 400)
+        return Error.error_default("Is Advert already added to favourites", 400)
 
     like = AdvertLikes(id_user=id_user, id_advert=advert.id)
     like.save()
