@@ -11,6 +11,7 @@ from main.service.Advert.delete_service import delete_advert_service
 from main.service.Advert.add_service import add_new_advert_data_service
 from main.service.Advert.edit_service import edit_advert_service
 from main.service.Advert.like_service import unlike_advert_service, like_advert_service
+from main.types.types import TWatchData
 
 adverts = Blueprint('adverts', __name__)
 
@@ -28,7 +29,7 @@ def get_adverts(**kwargs):
 @jwt_required(optional=True)
 @marshal_with(AdvertSchema)
 def get_advert(url_advert):
-    identity = {'jwt': get_jwt_identity(), 'ip': request.remote_addr}
+    identity: TWatchData = {'jwt': get_jwt_identity(), 'ip': str(request.remote_addr)}
     return get_advert_by_url_service(identity, url_advert=url_advert)
 
 
@@ -65,8 +66,8 @@ def delete_advert(url_advert):
 @jwt_required()
 def like_advert(url_advert):
     identity = get_jwt_identity()
-    watch_data = {'jwt': get_jwt_identity(), 'ip': request.remote_addr}
-    return like_advert_service(id_user=identity, url_advert=url_advert,watch_data=watch_data)
+    watch_data: TWatchData = {'jwt': identity, 'ip': str(request.remote_addr)}
+    return like_advert_service(id_user=identity, url_advert=url_advert, watch_data=watch_data)
 
 
 @adverts.route('like/<url_advert>', methods=["DELETE"])

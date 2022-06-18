@@ -6,6 +6,7 @@ from sqlalchemy import or_
 from config import Config
 import math
 import re
+from main.types.types import TWatchData
 
 
 def get_adverts_service(**kwargs):
@@ -87,7 +88,7 @@ def get_adverts_service(**kwargs):
     return response, 200
 
 
-def get_advert_by_url_service(identity, url_advert):
+def get_advert_by_url_service(identity: TWatchData, url_advert: str) -> tuple[object, int]:
     advert = Advert.query.filter(Advert.url == url_advert).first()
     if not advert:
         return Error.error_not_found()
@@ -96,7 +97,7 @@ def get_advert_by_url_service(identity, url_advert):
         return advert, 200
 
 
-def find_all_sub_catalogs(categories_id):
+def find_all_sub_catalogs(categories_id: list):
     result = []
     for category_id in categories_id:
         category = Category.query.filter(Category.id_category == category_id).first()
@@ -106,7 +107,7 @@ def find_all_sub_catalogs(categories_id):
 
 
 # find for one root category all sub categories
-def recursive_find_sub_categories(id_category, is_root, result):
+def recursive_find_sub_categories(id_category: int, is_root: bool, result: list):
     if is_root:
         all_sub_categories = session.query(Category.id_category, Category.is_root).filter(Category.id_root == id_category).all()
         for id_category, is_root in all_sub_categories:
@@ -123,8 +124,12 @@ def get_advert_condition_service():
         return {'message': 'Server Error' + str(e)}, 500
 
 
-def watch_advert(identity, id_advert):
-    is_watch = AdvertWatches.query.filter(AdvertWatches.id_advert == id_advert, or_(AdvertWatches.id_user == identity['jwt'], AdvertWatches.ip_user == identity['ip'])).first()
+def watch_advert(identity: TWatchData, id_advert: str):
+    if not identity['jwt']:
+        is_watch = AdvertWatches.query.filter(AdvertWatches.id_advert == id_advert, AdvertWatches.ip_user == identity['ip']).first()
+    else:
+        is_watch = AdvertWatches.query.filter(AdvertWatches.id_advert == id_advert, or_(AdvertWatches.id_user == identity['jwt'], AdvertWatches.ip_user == identity['ip'])).first()
+
     if not is_watch:
         watch = AdvertWatches(id_user=identity['jwt'], id_advert=id_advert, ip_user=identity['ip'])
         watch.save()

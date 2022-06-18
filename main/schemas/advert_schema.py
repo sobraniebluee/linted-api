@@ -4,7 +4,6 @@ from main.schemas.category_schema import CategorySchema
 from main.schemas.user_schema import UserSchema
 from main.schemas.file_schema import FileSchema
 from config import Config
-from main.models.Advert.advert_model import AdvertLikes, session
 
 
 class AdvertWatches(Schema):
@@ -66,7 +65,6 @@ class AdvertSchema(Schema):
     @post_dump
     def dump_data(self, data, **kwargs):
         if 'message' not in data:
-            print(data['likes'])
             data['likes'] = int(len(data['likes']))
             data['watches'] = int(len(data['watches']))
             return data

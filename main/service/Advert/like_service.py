@@ -1,9 +1,10 @@
 from main.models.Advert.advert_model import Advert, AdvertLikes, session
 from main.middleware.error import Error
 from .get_service import watch_advert
+from main.types.types import TWatchData
 
 
-def like_advert_service(id_user, url_advert, watch_data):
+def like_advert_service(id_user: str, url_advert: str, watch_data: TWatchData):
     advert = Advert.query.filter(Advert.url == url_advert).first()
     if not advert or advert.is_ban is not False:
         return Error.error_not_found(msg="Advert not found!")

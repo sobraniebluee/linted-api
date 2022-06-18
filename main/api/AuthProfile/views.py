@@ -15,8 +15,8 @@ profile = Blueprint('profile', __name__)
 
 
 @profile.route('/', methods=['GET'])
-@marshal_with(AuthSchema)
 @jwt_required()
+@marshal_with(AuthSchema)
 def get_profile_data():
     try:
         identity = get_jwt_identity()
@@ -26,9 +26,9 @@ def get_profile_data():
 
 
 @profile.route('/', methods=['PUT'])
+@jwt_required()
 @use_kwargs(ProfileSchema)
 @marshal_with(AuthSchema)
-@jwt_required()
 def update_profile_data(**kwargs):
     try:
         identity = get_jwt_identity()
@@ -38,8 +38,8 @@ def update_profile_data(**kwargs):
 
 
 @profile.route('/avatar', methods=['POST'])
-@marshal_with(UserAvatarSchema)
 @jwt_required()
+@marshal_with(UserAvatarSchema)
 def upload_profile_avatar():
     try:
         file = request.files['avatar']
