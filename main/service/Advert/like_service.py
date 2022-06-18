@@ -1,8 +1,9 @@
 from main.models.Advert.advert_model import Advert, AdvertLikes, session
 from main.middleware.error import Error
+from .get_service import watch_advert
 
 
-def like_advert_service(id_user, url_advert):
+def like_advert_service(id_user, url_advert, watch_data):
     advert = Advert.query.filter(Advert.url == url_advert).first()
     if not advert or advert.is_ban is not False:
         return Error.error_not_found(msg="Advert not found!")
@@ -12,6 +13,7 @@ def like_advert_service(id_user, url_advert):
 
     like = AdvertLikes(id_user=id_user, id_advert=advert.id)
     like.save()
+    watch_advert(watch_data, advert.id)
     return '', 204
 
 

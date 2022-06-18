@@ -4,6 +4,7 @@ from main.schemas.category_schema import CategorySchema
 from main.schemas.user_schema import UserSchema
 from main.schemas.file_schema import FileSchema
 from config import Config
+from main.models.Advert.advert_model import AdvertLikes, session
 
 
 class AdvertWatches(Schema):
@@ -14,7 +15,7 @@ class AdvertWatches(Schema):
     created_at = fields.String()
 
 
-class AdvertLikes(Schema):
+class AdvertLikesSchema(Schema):
     id = fields.Integer()
     id_user = fields.String()
     id_advert = fields.String()
@@ -58,13 +59,14 @@ class AdvertSchema(Schema):
     info = fields.Nested(AdvertInfoSchema)
     images = fields.Nested(AdvertImageSchema(many=True))
     user = fields.Nested(UserSchema(only=('username', 'avatar', 'id')))
-    likes = fields.Nested(AdvertLikes(only=('id', ), many=True), dump_only=True)
+    likes = fields.Nested(AdvertLikesSchema(only=('id', 'id_user'), many=True), dump_only=True)
     watches = fields.Nested(AdvertWatches(only=('id',), many=True), dump_only=True)
     message = fields.String(dump_only=True)
 
     @post_dump
     def dump_data(self, data, **kwargs):
         if 'message' not in data:
+            print(data['likes'])
             data['likes'] = int(len(data['likes']))
             data['watches'] = int(len(data['watches']))
             return data

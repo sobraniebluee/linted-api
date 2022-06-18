@@ -65,7 +65,8 @@ def delete_advert(url_advert):
 @jwt_required()
 def like_advert(url_advert):
     identity = get_jwt_identity()
-    return like_advert_service(id_user=identity, url_advert=url_advert)
+    watch_data = {'jwt': get_jwt_identity(), 'ip': request.remote_addr}
+    return like_advert_service(id_user=identity, url_advert=url_advert,watch_data=watch_data)
 
 
 @adverts.route('like/<url_advert>', methods=["DELETE"])
