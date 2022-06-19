@@ -2,7 +2,7 @@ from main.models.Advert.advert_model import Advert, AdvertInfo, session
 from main.models.Offer.offer_model import Offer
 from main.models.User.user_model import User
 from main.middleware.error import Error
-from config import Config
+from config import Const
 import datetime
 
 SELLER = 'seller'
@@ -19,7 +19,7 @@ def reqeust_offer_service(id_buyer, id_advert, price):
         return Error.server_error()
     if price >= advert.info.price:
         return Error.error_default(msg="Please enter price offer less than price product", status_code=400)
-    min_offer_price = advert.info.price * Config.OFFER_PRICE_PERCENT
+    min_offer_price = advert.info.price * Const.OFFER_PRICE_PERCENT
     if min_offer_price > price:
         return Error.error_default(msg=f"Price must equal or more than {min_offer_price}", status_code=400)
     buyer_offers = Offer.query.filter(Offer.id_buyer == id_buyer).all()
@@ -28,9 +28,9 @@ def reqeust_offer_service(id_buyer, id_advert, price):
         today = datetime.datetime.date(datetime.datetime.now())
         if today == item.created_at.date():
             buyer_offers_today += 1
-    if buyer_offers_today >= Config.MAX_COUNT_OFFERS_PER_DAY:
+    if buyer_offers_today >= Const.MAX_COUNT_OFFERS_PER_DAY:
         return Error.error_default(
-            msg=f"Sorry, per day you can sent only {Config.MAX_COUNT_OFFERS_PER_DAY} offers",
+            msg=f"Sorry, per day you can sent only {Const.MAX_COUNT_OFFERS_PER_DAY} offers",
             status_code=400)
     # prev_offers = Offer.query.filter(Offer.id_buyer == id_buyer, Offer.id_advert == Advert.id, Offer.from_who == BUYER).all()
     # for prev_offer in prev_offers:
@@ -70,7 +70,7 @@ def send_offer_service(seller_id, id_buyer, id_advert, price):
         return Error.server_error(msg="ddd")
     if price >= advert_price:
         return Error.error_default(msg="Please enter price offer less than price product", status_code=400)
-    min_offer_price = advert_price * Config.OFFER_PRICE_PERCENT
+    min_offer_price = advert_price * Const.OFFER_PRICE_PERCENT
     if min_offer_price > price:
         return Error.error_default(msg=f"Price must equal or more than {min_offer_price}", status_code=400)
     buyer_id, = session.query(User.id).filter(User.id == id_buyer).first()

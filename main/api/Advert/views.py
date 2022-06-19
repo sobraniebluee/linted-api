@@ -12,15 +12,17 @@ from main.service.Advert.add_service import add_new_advert_data_service
 from main.service.Advert.edit_service import edit_advert_service
 from main.service.Advert.like_service import unlike_advert_service, like_advert_service
 from main.types.types import TWatchData
-
+from main.decorators import pagination
+from config import Const
 adverts = Blueprint('adverts', __name__)
 
 
 # Get adverts
 @adverts.route('', methods=["GET"])
 @jwt_required(optional=True)
-@marshal_with(AllAdvertsSchema)
 @use_kwargs(ArgsAdvertsSchema, location='query')
+@marshal_with(AllAdvertsSchema)
+@pagination(_limit=Const.PAGE_COUNT_ADVERT)
 def get_adverts(**kwargs):
     identity = get_jwt_identity()
     return get_adverts_service(identity, **kwargs)

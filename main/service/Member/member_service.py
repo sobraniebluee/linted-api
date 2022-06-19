@@ -5,12 +5,11 @@ from main.models.Review.review_model import MemberReview
 from main.models.MemberSubscription.member_subscription_model import MemberSubscription
 from sqlalchemy import func
 from config import Const
-import math
 import re
 from sqlalchemy import or_
 
 
-def user_search_service(search_text, page):
+def user_search_service(search_text):
     if search_text == '':
         return Error.error_not_found()
     stm = session.query(User.id)
@@ -28,27 +27,10 @@ def user_search_service(search_text, page):
         for user_id, in users_id:
             user = User.query.filter(User.id == user_id).first()
             users.append(user)
-        users = [users[i:i + Const.MAX_MEMBER_PER_PAGE] for i in range(0, len(users_id), Const.MAX_MEMBER_PER_PAGE)]
-        try:
-            users = users[page]
-        except IndexError:
-            users = []
     else:
         users = []
 
-    page = page + 1
-    users_count = len(users_id)
-    total_pages = math.ceil(users_count / Const.MAX_MEMBER_PER_PAGE)
-    response = {
-        'users': users,
-        'pagination': {
-            'current_page': page,
-            'per_page': Const.MAX_MEMBER_PER_PAGE,
-            'total_entries': users_count,
-            'total_pages': total_pages
-        }
-    }
-    return response, 200
+    return users, 200
 
 
 def get_user_service(username):
@@ -75,9 +57,10 @@ def get_user_service(username):
 
 def get_user_wardrobe_service(username, id_user=None):
     if not id_user:
-        id_user, = session.query(User.id).filter(User.username == username).first()
+        id_user = session.query(User.id).filter(User.username == username).first()
         if not id_user:
             return Error.error_not_found()
+        id_user, = id_user
         condition_is_bought = Advert.is_bought == False
     else:
         condition_is_bought = Advert.is_bought.in_([True, False])
@@ -99,7 +82,7 @@ def get_user_reviews_service(username, me_id_user=None):
 def get_user_subscription_service(username, type_request):
     user = session.query(User.id).filter(User.username == username).first()
     if not user:
-        Error.server_error()
+        return Error.server_error()
     id_user, = user
     if type_request == Const.FOLlOWS:
         user_subscriptions = session.query(MemberSubscription.id_leader).filter(MemberSubscription.id_follower == id_user).all()

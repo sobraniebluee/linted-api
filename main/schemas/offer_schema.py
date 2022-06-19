@@ -1,16 +1,16 @@
 from marshmallow import Schema, fields, validate
-from config import Config
+from config import Const
 
 
 class RequestOfferSchema(Schema):
     id_advert = fields.String(required=True)
-    price = fields.Float(required=True, validate=[validate.Range(0, Config.MAX_PRICE)])
+    price = fields.Float(required=True, validate=[validate.Range(0, Const.MAX_PRICE)])
 
 
 class SendOfferSchema(Schema):
     id_advert = fields.String(required=True)
     id_buyer = fields.String(required=True)
-    price = fields.Float(required=True, validate=[validate.Range(0, Config.MAX_PRICE)])
+    price = fields.Float(required=True, validate=[validate.Range(0, Const.MAX_PRICE)])
 
 
 class OfferSchema(Schema):

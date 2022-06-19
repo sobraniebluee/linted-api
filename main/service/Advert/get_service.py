@@ -3,7 +3,7 @@ from main.models.Category.category_model import Category
 from main.models.Size.size_model import Size
 from main.middleware.error import Error
 from sqlalchemy import or_
-from config import Config
+from config import Const
 import math
 import re
 from main.types.types import TWatchData
@@ -16,8 +16,7 @@ def get_adverts_service(id_user=None, **kwargs):
     search_text = kwargs.get('search_text', '')
     sort = kwargs.get('sort', None)
     price_from = kwargs.get('price_from', 0)
-    price_to = kwargs.get('price_to', Config.MAX_PRICE)
-    page = kwargs.get('page', 1)
+    price_to = kwargs.get('price_to', Const.MAX_PRICE)
 
     if sort == 'desc':
         order_sort = AdvertInfo.price.desc()
@@ -66,27 +65,12 @@ def get_adverts_service(id_user=None, **kwargs):
         adverts = Advert.query.where(
                 Advert.id.in_(tmp_id)).filter(
                 AdvertInfo.id_advert == Advert.id,
-            ).order_by(order_sort).offset(
-            page * Config.PAGE_COUNT_ADVERT
-        ).limit(
-            Config.PAGE_COUNT_ADVERT
-        ).all()
+            ).order_by(order_sort).all()
         adverts = list(map(lambda x: x.check_is_liked(id_user), adverts))
     else:
         adverts = []
 
-    page = page + 1 if page == 0 else page
-    adverts_count = len(adverts_id)
-    total_pages = math.ceil(adverts_count / Config.PAGE_COUNT_ADVERT)
-    response = {
-        'items': adverts,
-        'pagination': {
-            'current_page': page,
-            'total_entries': adverts_count,
-            'total_pages': total_pages
-        }
-    }
-    return response, 200
+    return adverts, 200
 
 
 def get_advert_by_url_service(identity: TWatchData, url_advert: str) -> tuple[object, int]:

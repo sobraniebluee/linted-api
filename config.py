@@ -9,13 +9,6 @@ class Config:
     JWT_COOKIE_SECURE = False
     JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
     JWT_REFRESH_COOKIE_NAME = 'refresh_token_cookie'
-    MAX_COUNT_FILES_FOR_ADVERT = 8
-    ADVERT_IMAGE = 'advert_image'
-    AVATAR_IMAGE = 'avatar_image'
-    PAGE_COUNT_ADVERT = 24
-    MAX_PRICE = 1000000
-    OFFER_PRICE_PERCENT = 0.5
-    MAX_COUNT_OFFERS_PER_DAY = 7
 
 
 class ConfigAWS:
@@ -34,6 +27,11 @@ class Const:
     FOLLOWERS = 'followers'
     FOLlOWS = 'follows'
     MAX_MEMBER_PER_PAGE = 40
+    PAGE_COUNT_ADVERT = 24
+    MAX_COUNT_FILES_FOR_ADVERT = 8
+    MAX_PRICE = 1000000
+    OFFER_PRICE_PERCENT = 0.5
+    MAX_COUNT_OFFERS_PER_DAY = 7
 
 
 advert_condition_items = [

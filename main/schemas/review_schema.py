@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validate
 from config import Const
+from .pagination_schema import PaginationSchema
 
 
 class MemberReviewSchema(Schema):
@@ -12,3 +13,8 @@ class MemberReviewSchema(Schema):
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     message = fields.String(dump_only=True)
+
+
+class AllMemberReviewsSchema(Schema):
+    items = fields.Nested(MemberReviewSchema(many=True), dump_only=True)
+    pagination = fields.Nested(PaginationSchema, dump_only=True)

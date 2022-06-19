@@ -9,7 +9,9 @@ from main.service.profile_service import (
     update_avatar_service,
     get_user_liked_service
 )
-from main.schemas.advert_schema import AdvertSchema
+from main.schemas.advert_schema import AllAdvertsSchema, ArgsAdvertsSchema
+from main.decorators import pagination
+from config import Const
 
 profile = Blueprint('profile', __name__)
 
@@ -51,7 +53,9 @@ def upload_profile_avatar():
 
 @profile.route('/liked', methods=['GET'])
 @jwt_required()
-@marshal_with(AdvertSchema(many=True))
-def user_liked():
+@use_kwargs(ArgsAdvertsSchema(only=('page',)), location='query')
+@marshal_with(AllAdvertsSchema)
+@pagination(Const.PAGE_COUNT_ADVERT)
+def user_liked(**kwargs):
     identity = get_jwt_identity()
     return get_user_liked_service(identity)

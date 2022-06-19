@@ -3,7 +3,8 @@ from main.schemas.size_schema import SizeSchema
 from main.schemas.category_schema import CategorySchema
 from main.schemas.user_schema import UserSchema
 from main.schemas.file_schema import FileSchema
-from config import Config
+from config import Const
+from main.schemas.pagination_schema import PaginationSchema, ArgsPagination
 
 
 class AdvertWatches(Schema):
@@ -19,13 +20,6 @@ class AdvertLikesSchema(Schema):
     id_user = fields.String()
     id_advert = fields.String()
     created_at = fields.String()
-
-
-class AdvertPagination(Schema):
-    current_page = fields.Integer(dump_only=True)
-    total_pages = fields.Integer(dump_only=True)
-    total_entries = fields.Integer(dump_only=True)
-    per_page = fields.Integer(dump_only=True)
 
 
 class AdvertImageSchema(Schema):
@@ -73,7 +67,7 @@ class AdvertSchema(Schema):
             return data
 
 
-class ArgsAdvertsSchema(Schema):
+class ArgsAdvertsSchema(ArgsPagination):
     categories_id = fields.List(fields.Field(), load_only=True)
     search_text = fields.String(load_only=True)
     sizes_id = fields.List(fields.Field(), load_only=True)
@@ -81,7 +75,8 @@ class ArgsAdvertsSchema(Schema):
     price_from = fields.Float(load_only=True)
     price_to = fields.Float(load_only=True)
     conditions_id = fields.List(fields.Field(), load_only=True)
-    page = fields.Integer(load_only=True)
+    page = fields.Field(load_only=True)
+    limit = fields.Field(load_only=True)
 
     @post_load
     def parse_data(self, data, **kwargs):
@@ -91,27 +86,21 @@ class ArgsAdvertsSchema(Schema):
             data['sizes_id'] = self.parse_to_list(data['sizes_id'])
         if 'conditions_id' in data:
             data['conditions_id'] = self.parse_to_list(data['conditions_id'])
-        if 'page' in data:
-            try:
-                data['page'] = int(data['page'])
-            except Exception:
-                data['page'] = 0
-            if data['page'] < 1:
-                data['page'] = 1
-            if data['page']:
-                data['page'] = data['page'] - 1
-        else:
-            data['page'] = 0
         return data
 
     @staticmethod
     def parse_to_list(params):
-        return list(map(lambda x: int(x), str(params[0]).split(',')))
+        try:
+            parsed_list = list(map(lambda x: int(x), str(params[0]).split(',')))
+        except ValueError:
+            parsed_list = []
+        return parsed_list
 
 
 class AllAdvertsSchema(Schema):
     items = fields.Nested(AdvertSchema(many=True), dump_only=True)
-    pagination = fields.Nested(AdvertPagination, dump_only=True)
+    pagination = fields.Nested(PaginationSchema, dump_only=True)
+    message = fields.String(dump_only=True)
 
 
 class AdvertAddSchema(Schema):
@@ -126,7 +115,7 @@ class AdvertAddSchema(Schema):
     category_id = fields.Integer(required=True)
     size_id = fields.Integer()
     images = fields.List(fields.String(required=True), validate=[
-        validate.Length(max=Config.MAX_COUNT_FILES_FOR_ADVERT,
+        validate.Length(max=Const.MAX_COUNT_FILES_FOR_ADVERT,
                         error="Max number of images is 20"),
         validate.Length(min=1, error="Please set one image!")
     ])
@@ -144,7 +133,7 @@ class AdvertEditSchema(Schema):
     category_id = fields.Integer()
     size_id = fields.Integer()
     images = fields.List(fields.String(required=True), validate=[
-        validate.Length(max=Config.MAX_COUNT_FILES_FOR_ADVERT,
+        validate.Length(max=Const.MAX_COUNT_FILES_FOR_ADVERT,
                         error="Max number of images is 20"),
         validate.Length(min=1, error="Please set one image!")
     ])
