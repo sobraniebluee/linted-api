@@ -18,10 +18,12 @@ adverts = Blueprint('adverts', __name__)
 
 # Get adverts
 @adverts.route('', methods=["GET"])
+@jwt_required(optional=True)
 @marshal_with(AllAdvertsSchema)
 @use_kwargs(ArgsAdvertsSchema, location='query')
 def get_adverts(**kwargs):
-    return get_adverts_service(**kwargs)
+    identity = get_jwt_identity()
+    return get_adverts_service(identity, **kwargs)
 
 
 # Get one Advert

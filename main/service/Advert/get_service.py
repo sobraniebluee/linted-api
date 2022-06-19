@@ -9,7 +9,7 @@ import re
 from main.types.types import TWatchData
 
 
-def get_adverts_service(**kwargs):
+def get_adverts_service(id_user=None, **kwargs):
     categories_id = kwargs.get('categories_id', None)
     conditions_id = kwargs.get('conditions_id', None)
     sizes_id = kwargs.get('sizes_id', None)
@@ -71,6 +71,7 @@ def get_adverts_service(**kwargs):
         ).limit(
             Config.PAGE_COUNT_ADVERT
         ).all()
+        adverts = list(map(lambda x: x.check_is_liked(id_user), adverts))
     else:
         adverts = []
 
@@ -94,6 +95,7 @@ def get_advert_by_url_service(identity: TWatchData, url_advert: str) -> tuple[ob
         return Error.error_not_found()
     else:
         watch_advert(identity=identity, id_advert=advert.id)
+        advert.check_is_liked(identity['jwt'])
         return advert, 200
 
 

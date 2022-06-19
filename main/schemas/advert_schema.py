@@ -61,6 +61,7 @@ class AdvertSchema(Schema):
     likes = fields.Nested(AdvertLikesSchema(only=('id', 'id_user'), many=True), dump_only=True)
     watches = fields.Nested(AdvertWatches(only=('id',), many=True), dump_only=True)
     message = fields.String(dump_only=True)
+    is_liked = fields.Boolean(dump_only=True)
 
     @post_dump
     def dump_data(self, data, **kwargs):
@@ -91,6 +92,10 @@ class ArgsAdvertsSchema(Schema):
         if 'conditions_id' in data:
             data['conditions_id'] = self.parse_to_list(data['conditions_id'])
         if 'page' in data:
+            try:
+                data['page'] = int(data['page'])
+            except Exception:
+                data['page'] = 0
             if data['page'] < 1:
                 data['page'] = 1
             if data['page']:

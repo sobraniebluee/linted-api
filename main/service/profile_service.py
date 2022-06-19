@@ -58,6 +58,7 @@ def update_avatar_service(user_id, file):
         return Error.server_error(e)
 
 
-def get_user_favourites_service(id_user):
-    favourites = Advert.query.filter(AdvertLikes.id_user == id_user, AdvertLikes.id_advert == Advert.id).all()
-    return favourites, 200
+def get_user_liked_service(id_user):
+    adverts = Advert.query.filter(AdvertLikes.id_user == id_user, AdvertLikes.id_advert == Advert.id).all()
+    adverts = list(map(lambda x: x.check_is_liked(id_user), adverts))
+    return adverts, 200

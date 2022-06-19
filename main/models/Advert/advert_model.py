@@ -25,6 +25,7 @@ class Advert(Base):
     user = relationship('User', backref='adverts', uselist=False)
 
     def __init__(self, id_user):
+        self.is_liked = None
         self.id = uuid.uuid4()
         self.id_user = id_user
         self.rating = 0
@@ -56,6 +57,17 @@ class Advert(Base):
         except Exception:
             session.rollback()
             raise
+
+    def check_is_liked(self, id_user=None):
+        if not id_user:
+            self.is_liked = False
+        else:
+            is_liked = AdvertLikes.query.filter(AdvertLikes.id_advert == self.id, AdvertLikes.id_user == id_user).first()
+            if is_liked:
+                self.is_liked = True
+            else:
+                self.is_liked = False
+        return self
 
 
 class AdvertInfo(Base):

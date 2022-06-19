@@ -7,7 +7,7 @@ from main.service.profile_service import (
     get_profile_data_service,
     update_profile_data_service,
     update_avatar_service,
-    get_user_favourites_service
+    get_user_liked_service
 )
 from main.schemas.advert_schema import AdvertSchema
 
@@ -49,9 +49,9 @@ def upload_profile_avatar():
         return {'message': f'Server Error: {str(e)}'}
 
 
-@profile.route('/favourites', methods=['GET'])
+@profile.route('/liked', methods=['GET'])
 @jwt_required()
 @marshal_with(AdvertSchema(many=True))
-def user_favourites():
+def user_liked():
     identity = get_jwt_identity()
-    return get_user_favourites_service(identity)
+    return get_user_liked_service(identity)

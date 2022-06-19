@@ -82,6 +82,7 @@ def get_user_wardrobe_service(username, id_user=None):
     else:
         condition_is_bought = Advert.is_bought.in_([True, False])
     adverts = Advert.query.filter(Advert.id_user == id_user, condition_is_bought).all()
+    adverts = list(map(lambda x: x.check_is_liked(id_user), adverts))
     return adverts, 200
 
 
