@@ -6,6 +6,7 @@ from main.service.category_service import (
     get_categories_service,
     add_category_service,
     delete_category_service)
+from main import docs
 
 categories = Blueprint('categories', __name__)
 
@@ -30,3 +31,9 @@ def add_category(**kwargs):
 @categories.route('<int:id_category>', methods=['DELETE'])
 def delete_category(id_category):
     return delete_category_service(id_category)
+
+
+docs.register(get_categories, blueprint="categories")
+docs.register(get_categories_by_id, blueprint="categories")
+docs.register(add_category, blueprint="categories")
+docs.register(delete_category, blueprint="categories")

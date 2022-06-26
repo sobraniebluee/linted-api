@@ -19,6 +19,7 @@ apispec-webframeworks = "*"
 boto3 = "*"
 pillow = "*"
 pyheif = "*"
+flask-swagger-ui = "*"
 
 [dev-packages]
 

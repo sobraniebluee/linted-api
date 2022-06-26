@@ -39,7 +39,6 @@ class User(Base):
     def auth(cls, password, email=None, username=None):
         if username:
             user = cls.query.filter(cls.username == f'@{username}').first()
-            session.commit()
             if not user:
                 return {'auth': False, 'error': _error_response('username', 'Sorry,this username not found!')}
             if not bcrypt.verify(password, user.password):
@@ -47,7 +46,6 @@ class User(Base):
             return {'auth': True, 'data': user}
         if email:
             user = cls.query.filter(cls.email == email).first()
-            session.commit()
             if not user:
                 return {'auth': False, 'error': _error_response('email', 'Sorry,this email not found!')}
             if not bcrypt.verify(password, user.password):

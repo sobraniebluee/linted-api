@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from main.schemas.user_schema import UserSchema, AuthSchema, JWTSchema, UserAdditionalInfo
+from main.schemas.user_schema import UserSchema, ResponseAuthSchema, JWTSchema, RegisterSchema,UserAdditionalInfo
 from main.service.user_service import (
     register_user_service,
     login_user_service,
@@ -9,12 +9,13 @@ from main.service.user_service import (
     logout_service,
     additional_info_service
 )
+from main import docs
 users = Blueprint('users', __name__)
 
 
 @users.route('/register', methods=['POST'])
-@use_kwargs(UserSchema)
-@marshal_with(AuthSchema)
+@use_kwargs(RegisterSchema)
+@marshal_with(ResponseAuthSchema)
 def register_user(**kwargs):
     ip_user = request.remote_addr
     return register_user_service(ip_user=ip_user, **kwargs)
@@ -22,7 +23,7 @@ def register_user(**kwargs):
 
 @users.route('/login', methods=["POST"])
 @use_kwargs(UserSchema(only=('email', 'password', 'username')))
-@marshal_with(AuthSchema)
+@marshal_with(ResponseAuthSchema)
 def login_user(**kwargs):
     return login_user_service(**kwargs)
 
@@ -57,5 +58,11 @@ def additional_info(**kwargs):
     identity = get_jwt_identity()
     return additional_info_service(identity=identity, **kwargs)
 
+
+docs.register(register_user, blueprint='users')
+docs.register(login_user, blueprint='users')
+docs.register(logout, blueprint='users')
+docs.register(refresh_token, blueprint='users')
+docs.register(additional_info, blueprint='users')
 
 

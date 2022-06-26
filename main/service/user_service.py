@@ -2,8 +2,8 @@ from main.models.User.user_model import User, UserAdditionalInfo, UserAvatar, Us
 from main.utils import get_ip_addr, _error_response
 from main.service.token_service import jwt_tokens
 from config import ConfigAWS
-
-
+from main.types.types import ResponseBase
+import typing
 # Register Auth
 
 # Response code [200,405,400,500]
@@ -15,15 +15,25 @@ from config import ConfigAWS
 # }
 
 
-def register_user_service(ip_user, **kwargs):
+class TRegisterKwargs:
+    email: str
+    username: str
+    password: str
+
+
+class TLoginKwargs:
+    email: str | None
+    username: str | None
+    password: str
+
+
+def register_user_service(ip_user: str, **kwargs: TRegisterKwargs) -> ResponseBase:
     email = kwargs.get('email', None)
     username = kwargs.get('username', None)
     password = kwargs.get('password')
     is_exists_email = User.query.filter(User.email == email).first()
     is_exists_username = User.query.filter(User.username == f'@{username}').first()
 
-    if not username or not email:
-        return '', 405
     if is_exists_email:
         return {"message": _error_response('email', 'Sorry,this email already used')}, 400
     if is_exists_username:
@@ -56,7 +66,7 @@ def register_user_service(ip_user, **kwargs):
 # }
 
 
-def login_user_service(**kwargs):
+def login_user_service(**kwargs: TLoginKwargs) -> ResponseBase:
     username = kwargs.get('username', None)
     email = kwargs.get('email', None)
     password = kwargs.get('password')
@@ -104,7 +114,7 @@ def refresh_token_service(**kwargs):
         return {'message': f"Server error: {e}"}, 500
 
 
-def logout_service(user_id):
+def logout_service(user_id: str) -> ResponseBase:
     try:
         user_token = UserTokens.query.filter(UserTokens.user_id == user_id).first()
 
@@ -115,7 +125,7 @@ def logout_service(user_id):
         return {'message': f"Server error: {e}"}, 500
 
 
-def additional_info_service(identity, **kwargs):
+def additional_info_service(identity, **kwargs) -> ResponseBase:
     try:
         user_data = UserAdditionalInfo.query.filter(UserAdditionalInfo.id_user == identity).first()
         if not user_data:

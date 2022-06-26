@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from main.schemas.profile_schema import ProfileSchema
-from main.schemas.user_schema import AuthSchema, UserAvatarSchema
+from main.schemas.user_schema import ResponseAuthSchema, UserAvatarSchema
 from flask_apispec import marshal_with, use_kwargs
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from main.service.profile_service import (
@@ -12,25 +12,23 @@ from main.service.profile_service import (
 from main.schemas.advert_schema import AllAdvertsSchema, ArgsAdvertsSchema
 from main.decorators import pagination
 from config import Const
+from main import docs
 
 profile = Blueprint('profile', __name__)
 
 
 @profile.route('/', methods=['GET'])
 @jwt_required()
-@marshal_with(AuthSchema)
+@marshal_with(ResponseAuthSchema)
 def get_profile_data():
-    try:
-        identity = get_jwt_identity()
-        return get_profile_data_service(user_id=identity)
-    except Exception:
-        raise
+    identity = get_jwt_identity()
+    return get_profile_data_service(user_id=identity)
 
 
 @profile.route('/', methods=['PUT'])
 @jwt_required()
 @use_kwargs(ProfileSchema)
-@marshal_with(AuthSchema)
+@marshal_with(ResponseAuthSchema)
 def update_profile_data(**kwargs):
     try:
         identity = get_jwt_identity()
@@ -59,3 +57,8 @@ def upload_profile_avatar():
 def user_liked(**kwargs):
     identity = get_jwt_identity()
     return get_user_liked_service(identity)
+
+
+docs.register(get_profile_data, blueprint='profile')
+docs.register(update_profile_data, blueprint='profile')
+docs.register(user_liked, blueprint='profile')

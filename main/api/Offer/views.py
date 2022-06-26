@@ -4,6 +4,7 @@ from main.service.offer_service import reqeust_offer_service, accept_offer_servi
 from flask_apispec import use_kwargs, marshal_with
 from main.schemas.offer_schema import RequestOfferSchema, OfferSchema, SendOfferSchema
 from main.middleware.error import Error
+from main import docs
 offers = Blueprint('offers', __name__)
 
 
@@ -22,7 +23,7 @@ def request_offer(**kwargs):
 @offers.route('accept_offer/<int:id_offer>', methods=['PUT', 'DELETE'])
 @jwt_required()
 @marshal_with(OfferSchema)
-def cancel_offer(id_offer):
+def accept_offer(id_offer):
     identity = get_jwt_identity()
     is_accept = False if request.method == 'DELETE' else True
     return accept_offer_service(id_offer, is_accept, identity)
@@ -35,3 +36,8 @@ def cancel_offer(id_offer):
 def send_offer(**kwargs):
     identity = get_jwt_identity()
     return send_offer_service(identity, **kwargs)
+
+
+docs.register(request_offer, blueprint='offers')
+docs.register(send_offer, blueprint='offers')
+docs.register(accept_offer, blueprint='offers')

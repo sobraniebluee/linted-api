@@ -14,6 +14,8 @@ from main.service.Advert.like_service import unlike_advert_service, like_advert_
 from main.types.types import TWatchData
 from main.decorators import pagination
 from config import Const
+from main import docs
+
 adverts = Blueprint('adverts', __name__)
 
 
@@ -86,3 +88,15 @@ def unlike_advert(url_advert):
 @marshal_with(AdvertConditionSchema(many=True))
 def get_adverts_condition():
     return get_advert_condition_service()
+
+
+docs.register(get_advert, blueprint='adverts')
+docs.register(get_adverts, blueprint='adverts')
+docs.register(get_adverts_condition, blueprint='adverts')
+docs.register(delete_advert, blueprint='adverts')
+docs.register(add_new_advert, blueprint='adverts')
+docs.register(edit_advert, blueprint='adverts')
+docs.register(like_advert, blueprint='adverts')
+docs.register(unlike_advert, blueprint='adverts')
+
+

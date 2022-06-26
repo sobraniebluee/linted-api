@@ -2,13 +2,13 @@ from datetime import timedelta
 
 
 class Config:
-    ROOT_API_PATH = '/api/v.1.0'
+    ROOT_API_PATH = '/api/v1'
     JWT_SECRET_KEY = '5fa7bc58-8a03-4d32-b083-6392a11ee8b3'
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     JWT_COOKIE_SECURE = False
-    JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
-    JWT_REFRESH_COOKIE_NAME = 'refresh_token_cookie'
+    SECRET = '5d724b35-2ea4-4a58-b741-9f2c3056311d'
+    DEBUG = True
 
 
 class ConfigAWS:
@@ -21,6 +21,7 @@ class ConfigAWS:
 
 
 class Const:
+    ROOT_API_PATH = '/api/v1'
     FOLLOW = 'follow'
     UNFOLLOW = 'unfollow'
     MAX_LENGTH_REVIEW = 128
@@ -32,6 +33,8 @@ class Const:
     MAX_PRICE = 1000000
     OFFER_PRICE_PERCENT = 0.5
     MAX_COUNT_OFFERS_PER_DAY = 7
+    JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
+    JWT_REFRESH_COOKIE_NAME = 'refresh_token_cookie'
 
 
 advert_condition_items = [

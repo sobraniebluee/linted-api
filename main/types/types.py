@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional
+from typing import TypedDict, Optional, Tuple
 
 
 class TWatchData(TypedDict):
@@ -16,3 +16,9 @@ class TPagination(TypedDict):
 class ResponsePagination(TypedDict):
     items: list[object]
     pagination: TPagination
+
+
+ResponseBase = Tuple[dict | str, int]
+
+class TAuthUser:
+    pass

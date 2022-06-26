@@ -14,9 +14,8 @@ from main.service.Member.subscription_service import toggle_subscription_service
 from config import Const
 from main.schemas.review_schema import AllMemberReviewsSchema
 from main.schemas.member_schema import MemberSchema, QueryMemberSchema, AllMemberSubs,ResponseSearchMembersSchema
-from main.schemas.user_schema import UserSchema
 from main.decorators import pagination
-
+from main import docs
 members = Blueprint('members', __name__)
 
 
@@ -81,6 +80,14 @@ def toggle_subscription(**kwargs):
     type_toggle = Const.FOLLOW if request.method == 'POST' else Const.UNFOLLOW
     return toggle_subscription_service(id_follower, type_toggle, **kwargs)
 
+
+docs.register(get_users_search, blueprint='members')
+docs.register(get_user, blueprint='members')
+docs.register(get_user_wardrobe, blueprint='members')
+docs.register(get_user_reviews, blueprint='members')
+docs.register(get_user_followers, blueprint='members')
+docs.register(get_user_follows, blueprint='members')
+docs.register(toggle_subscription, blueprint='members')
 
 
 

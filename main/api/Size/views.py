@@ -3,7 +3,7 @@ from flask_apispec import marshal_with, use_kwargs
 from flask_jwt_extended import jwt_required
 from main.service.size_service import add_sizes_service, get_sizes_service
 from main.schemas.size_schema import SizeSchema
-
+from main import docs
 sizes = Blueprint('sizes', __name__)
 
 
@@ -26,3 +26,6 @@ def get_sizes():
 def add_sizes(**kwargs):
     return add_sizes_service(**kwargs), 200
 
+
+docs.register(get_sizes, blueprint='sizes')
+docs.register(add_sizes, blueprint='sizes')
