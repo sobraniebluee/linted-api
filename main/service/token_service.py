@@ -9,7 +9,7 @@ def jwt_tokens(user_id):
         access = item.get_access_token(item.user_id)
         refresh = item.get_refresh_token(item.user_id)
         setattr(item, 'access_token', access)
-        setattr(item, 'updated_at', func.now())
+        setattr(item, 'refresh_token', refresh)
         item.commit()
         return {
             "access_token": access,
@@ -28,10 +28,10 @@ def is_revoked_token_service(identity, jwt_header, jwt_payload):
     try:
         token_encode = jwt.encode(jwt_payload, Config.JWT_SECRET_KEY, algorithm=jwt_header['alg'])
         token = UserTokens.query.filter(UserTokens.user_id == identity).scalar()
-        if token_encode != token.access_token:
+        if not token:
             return True
-        if token:
-            return token is None
+        if token_encode == token.access_token or token_encode == token.refresh_token:
+            return False
         return True
     except Exception:
         raise

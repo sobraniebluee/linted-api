@@ -90,7 +90,8 @@ class UserAdditionalInfo(Base):
             session.rollback()
             raise
 
-    def commit(self):
+    @staticmethod
+    def commit():
         try:
             session.commit()
         except Exception:
@@ -121,8 +122,13 @@ class UserTokens(Base):
     def get_refresh_token(cls, identity):
         return create_refresh_token(identity=identity)
 
-    def commit(self):
-        session.commit()
+    @staticmethod
+    def commit():
+        try:
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
 
     def save(self):
         try:
@@ -165,8 +171,12 @@ class UserAvatar(Base):
             session.rollback()
             raise
 
-    @classmethod
-    def commit(cls):
-        session.commit()
+    @staticmethod
+    def commit():
+        try:
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
 
 

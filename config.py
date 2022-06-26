@@ -2,13 +2,13 @@ from datetime import timedelta
 
 
 class Config:
-    ROOT_API_PATH = '/api/v1'
-    JWT_SECRET_KEY = '5fa7bc58-8a03-4d32-b083-6392a11ee8b3'
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
-    JWT_COOKIE_SECURE = False
     SECRET = '5d724b35-2ea4-4a58-b741-9f2c3056311d'
     DEBUG = True
+    TESTING = False
+    JWT_SECRET_KEY = '5fa7bc58-8a03-4d32-b083-6392a11ee8b3'
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=24)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_COOKIE_SECURE = False
 
 
 class ConfigAWS:
@@ -36,33 +36,5 @@ class Const:
     JWT_ACCESS_COOKIE_NAME = 'access_token_cookie'
     JWT_REFRESH_COOKIE_NAME = 'refresh_token_cookie'
 
-
-advert_condition_items = [
-    {
-        "id": 100,
-        "name": "New with tags",
-        "description": "A brand-new, unused item with tags attached or in the original packaging."
-    },
-    {
-        "id": 200,
-        "name": "New without tags",
-        "description": "A brand-new, unused item without tags or original packaging."
-    },
-    {
-        "id": 300,
-        "name": "Very good",
-        "description": "A lightly used item that may have slight imperfections, but still looks great. Include photos and descriptions of any flaws in your listing."
-    },
-    {
-        "id": 400,
-        "name": "Good",
-        "description": "A used item that may show imperfections and signs of wear. Include photos and descriptions of flaws in your listing."
-    },
-    {
-        "id": 500,
-        "name": "Satisfactory",
-        "description": "A frequently used item with imperfections and signs of wear. Include photos and descriptions of flaws in your listing."
-    }
-]
 
 DB = "mysql+pymysql://root@localhost/linted?charset=utf8mb4"
